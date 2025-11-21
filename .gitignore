@@ -1,0 +1,58 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# R package/library caches
+renv/library/
+renv/staging/
+
+# Conda / virtual environments
+.env/
+.venv/
+env/.mamba/
+env/.conda/
+
+# Build artifacts
+*.log
+*.tmp
+*.aux
+
+# Office or binary files (tracked via LFS if needed)
+*.docx
+*.pptx
+*.xlsx
+
+# Data (keep directory structure)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/derived/*
+!data/derived/.gitkeep
+data/metadata/*
+!data/metadata/.gitkeep
+
+# Figures / outputs
+analysis/figures/*
+!analysis/figures/.gitkeep
+manuscript/figures/*
+!manuscript/figures/.gitkeep
+supplement/figures/*
+!supplement/figures/.gitkeep
+supplement/tables/*
+!supplement/tables/.gitkeep
+
+# Cache folders (if using knitr/Quarto later)
+*_cache/
+.cache/
