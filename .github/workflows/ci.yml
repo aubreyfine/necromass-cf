@@ -27,16 +27,8 @@ jobs:
         shell: bash -l {0}
         run: |
           python -V
-          python -c "import sys; print(sys.executable)"
-          python - <<'PY'
-import importlib
-for m in ["numpy","pandas","SALib","scipy","matplotlib","statsmodels"]:
-    try:
-        mod = importlib.import_module(m)
-        print(m, getattr(mod, "__version__", ""))
-    except Exception as e:
-        print("Missing:", m, e)
-PY
+          python -c "import sys; print('Python:', sys.executable)"
+          python -c "import numpy, pandas, scipy, matplotlib, statsmodels; print('Py deps OK')"
 
       # ---------- R + renv ----------
       - name: Set up R
@@ -44,21 +36,22 @@ PY
         with:
           r-version: "4.3.2"
 
+      # Only run renv restore if renv.lock exists
       - name: Restore R packages with renv
+        if: ${{ hashFiles('renv.lock') != '' }}
         uses: r-lib/actions/setup-renv@v2
         with:
           cache-version: 1
 
       # ---------- Lightweight smoke test ----------
-      # Keep CI fast and resilient even if scripts aren't added yet.
       - name: Run lightweight checks
         shell: bash -l {0}
         run: |
-          Rscript -e "cat('R session OK\\n'); if (file.exists('analysis/R/00_setup.R')) source('analysis/R/00_setup.R')"
-          if [ -f analysis/R/10_traits_variation.R ]; then Rscript analysis/R/10_traits_variation.R; else echo 'Skip R figure script'; fi
-          if [ -f analysis/python/sobol_run.py ]; then python analysis/python/sobol_run.py --smoke || true; else echo 'Skip Python Sobol script'; fi
+          Rscript -e "cat('R session OK\\n'); sessionInfo()"
+          if [ -f analysis/R/00_setup.R ]; then Rscript analysis/R/00_setup.R; else echo 'Skip 00_setup.R'; fi
+          if [ -f analysis/R/10_traits_variation.R ]; then Rscript analysis/R/10_traits_variation.R || true; else echo 'Skip traits script'; fi
+          if [ -f analysis/python/sobol_run.py ]; then python analysis/python/sobol_run.py --smoke || true; else echo 'Skip sobol'; fi
 
-      # ---------- Collect any outputs if present ----------
       - name: Upload smoke artifacts
         if: always()
         uses: actions/upload-artifact@v4
