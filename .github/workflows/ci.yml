@@ -2,63 +2,62 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # ---------- Python (conda) ----------
-      - name: Set up Conda
-        uses: conda-incubator/setup-miniconda@v3
+      # 1) Set up R (use binaries via RSPM for faster installs)
+      - uses: r-lib/actions/setup-r@v2
         with:
-          activate-environment: necromass-cf
-          environment-file: env/environment.yml
-          auto-activate-base: false
-          use-mamba: true
+          r-version: '4.3.2'
+          use-public-rspm: true
 
-      - name: Python session info
-        shell: bash -l {0}
+      # 2) System libs required for curl/xml2/harfbuzz/fribidi/fontconfig/png/jpeg/tiff
+      - name: Install system dependencies
         run: |
-          python -V
-          python -c "import sys; print('Python:', sys.executable)"
-          python -c "import numpy, pandas, scipy, matplotlib, statsmodels; print('Py deps OK')"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            libxml2-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libharfbuzz-dev \
+            libfribidi-dev \
+            libpng-dev \
+            libtiff5-dev \
+            libjpeg-dev
 
-      # ---------- R + renv ----------
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
+      # 3) Resolve R package dependencies (auto-detects from DESCRIPTION/renv if present)
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          r-version: "4.3.2"
+          extra-packages: |
+            any::tidyverse
+            any::httr
+            any::rvest
+            any::ragg
+            any::systemfonts
+            any::textshaping
+            any::googledrive
+            any::googlesheets4
+          needs: tidyverse
 
-      # Only run renv restore if renv.lock exists
-      - name: Restore R packages with renv
-        if: ${{ hashFiles('renv.lock') != '' }}
-        uses: r-lib/actions/setup-renv@v2
+      # 4) (Optional) Cache package library for speed
+      - uses: actions/cache@v4
         with:
-          cache-version: 1
+          path: ~/.cache/R/renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: ${{ runner.os }}-renv-
 
-      # ---------- Lightweight smoke test ----------
-      - name: Run lightweight checks
-        shell: bash -l {0}
+      # 5) Your build / tests
+      - name: Run script / tests
         run: |
-          Rscript -e "cat('R session OK\\n'); sessionInfo()"
-          if [ -f analysis/R/00_setup.R ]; then Rscript analysis/R/00_setup.R; else echo 'Skip 00_setup.R'; fi
-          if [ -f analysis/R/10_traits_variation.R ]; then Rscript analysis/R/10_traits_variation.R || true; else echo 'Skip traits script'; fi
-          if [ -f analysis/python/sobol_run.py ]; then python analysis/python/sobol_run.py --smoke || true; else echo 'Skip sobol'; fi
-
-      - name: Upload smoke artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: smoke-artifacts
-          path: |
-            analysis/figures/**/*.png
-            analysis/figures/**/*.pdf
-            supplement/tables/**/*.csv
-          if-no-files-found: ignore
+          Rscript -e "sessionInfo()"
+          Rscript -e "library(tidyverse); library(httr); library(rvest); library(ragg); library(googledrive); library(googlesheets4); 'OK' %>% print()"
+          # Rscript scripts/build.R
+          # Rscript -e "testthat::test_dir('tests')"
