@@ -1,6 +1,6 @@
 # Trait Variation and Structural Bias in Conversion Factor Models of Soil Microbial Necromass Carbon
 
-_Aubrey K. Fine, Fernanda Santos, Larry York_  
+_Aubrey K. Fine, Fernanda Santos, Larry M. York_  
 Environmental Sciences Division & Biosciences Division, Oak Ridge National Laboratory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -98,5 +98,6 @@ Please cite the following if you use this repository:
 
 > Fine, A.K., Santos, F., York, L. (202X). *Trait Variation and Structural Bias in Conversion Factor Models of Soil Microbial Necromass Carbon*. Submitted to *Soil Biology and Biochemistry*.  
 > DOI: https://doi.org/10.5281/zenodo.16905679
+
 
 
