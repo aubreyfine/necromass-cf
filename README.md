@@ -1,7 +1,7 @@
-# Limits of Reliability in Biomarker-Based Estimates of Microbial Necromass in Soil Carbon Models
+# Trait Variation and Structural Bias in Conversion Factor Models of Soil Microbial Necromass Carbon
 
 _Aubrey K. Fine, Fernanda Santos, Larry York_  
-Biosciences Division, Oak Ridge National Laboratory  
+Environmental Sciences Division & Biosciences Division, Oak Ridge National Laboratory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![renv](https://img.shields.io/badge/reproducibility-renv-blue)](https://rstudio.github.io/renv/)
@@ -10,8 +10,8 @@ Biosciences Division, Oak Ridge National Laboratory
 
 This repository contains the code, data, and figures supporting the manuscript:
 
-> **"Limits of Reliability in Biomarker-Based Estimates of Microbial Necromass in Soil Carbon Models"**  
-> Submitted to *Nature Geoscience* (202X)
+> **"Trait Variation and Structural Bias in Conversion Factor Models of Soil Microbial Necromass Carbon"**  
+> Submitted to *Soil Biology and Giochemistry* (202X)
 
 The study evaluates the assumptions and uncertainty surrounding the use of fixed conversion factors (CFs) to estimate microbial necromass carbon (NecC) in soils from amino sugar biomarkers (MurA and GlcN). We compare standard CF-based models with a direct C mass-based approach and apply global sensitivity analysis to identify key drivers of uncertainty.
 
@@ -19,11 +19,12 @@ The study evaluates the assumptions and uncertainty surrounding the use of fixed
 
 ## 📁 Repository Structure
 
-- `data/`: Curated datasets of MurA and GlcN concentrations and simulation parameters.
-- `analysis/`: R scripts for modeling, GAM fitting, and Sobol sensitivity analysis.
-- `results/`: Output figures, model summaries, and processed data for publication.
-- `manuscript/`: Submitted manuscript files and supplementary documentation.
-
+- `analysis/`: R and Python scripts and figure generation.
+- `data/`: raw, processes, and derived datasets (+ metadata).
+- `manuscript/`: manuscript text, journal figures, submission files.
+- `supplement/`: SI tables/figures.
+- `env/`: renv lock + conda environment. 
+- `github/`: CI and release workflows.
 ---
 
 ## 📦 Software Requirements
@@ -71,12 +72,11 @@ To reproduce the key findings and figures:
 
 ---
 
-## 📊 Key Figures and Tables
+## 📊 Figures and Tables
 
-- **Figure 1–3:** Taxonomic distributions of MurA and GlcN
-- **Figure 4:** Sobol sensitivity indices for CF and NecC models
-- **Figure 6:** Comparison between CF-based and C mass-based necromass estimates
-- **Tables S1–S6:** GAM summaries, parameter ranges, and statistical tests
+- **Main figures:** 1-7
+- **Supplementary figures:** S1-S11
+- **Tables:** 1-2 and S1-S9
 
 ---
 
@@ -96,6 +96,7 @@ For questions, contact [Aubrey Fine](mailto:fineak@ornl.gov)
 
 Please cite the following if you use this repository:
 
-> Fine, A.K., Santos, F., York, L. (202X). *Limits of Reliability in Biomarker-Based Estimates of Microbial Necromass in Soil Carbon Models*. Submitted to *Nature Geoscience*.  
-> DOI: *pending Zenodo assignment upon public release*
+> Fine, A.K., Santos, F., York, L. (202X). *Trait Variation and Structural Bias in Conversion Factor Models of Soil Microbial Necromass Carbon*. Submitted to *Soil Biology and Biochemistry*.  
+> DOI: https://doi.org/10.5281/zenodo.16905679
+
 
